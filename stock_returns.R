@@ -1,8 +1,26 @@
-tickers <- c("TSLA","NVDA")
+install.packages("tidyverse","PerformanceAnalytics",
+                 "quantmod","yfR")
+
+
+library(tidyverse)
+library(PerformanceAnalytics)
+library(quantmod)
+library(yfR)
+
+
+
+
+holdings <- read_csv("holdings.csv", col_types = cols(Acquired = col_date(format = "%m/%d/%Y"), 
+                                                      `Today's Change (%)` = col_double(), 
+                                                      `Today's Change ($)` = col_double()))
+View(holdings)
+
+tickers <- holdings$Symbol %>% na.omit %>% unique()
+length(tickers)
 
 Portfolio <- yf_get(
   tickers,
-  first_date = Sys.Date() - 300,
+  first_date = Sys.Date() - 30,
   last_date = Sys.Date(),
   thresh_bad_data = 0.75,
   bench_ticker = "^GSPC",
